@@ -1,4 +1,8 @@
 #include "TicTacToeBoard.h"
+
+#include <cstdlib>    
+#include <ctime>
+
 /**
  * Class for representing a 3x3 Tic-Tac-Toe game board, using the Piece enum
  * to represent the spaces on the board.
@@ -19,7 +23,8 @@ TicTacToeBoard::TicTacToeBoard()
 **/
 Piece TicTacToeBoard::toggleTurn()
 {
-  return Invalid;
+  turn = (turn == X) ? O : X;
+  return turn;
 }
 
 /**
@@ -33,7 +38,22 @@ Piece TicTacToeBoard::toggleTurn()
 **/ 
 Piece TicTacToeBoard::placePiece(int row, int column)
 {
-  return Invalid;
+  if (row > 3 || column > 3)
+    return Invalid;
+
+  else if (board[row][column] == X || board[row][column] == O)
+  {
+    return board[row][column];
+  }
+  
+  else if (board[row][column] == Blank)
+  {
+    board[row][column] = turn;
+    toggleTurn();
+    return board[row][column];
+  }
+  else 
+    return Invalid;
 }
 
 /**
@@ -42,7 +62,10 @@ Piece TicTacToeBoard::placePiece(int row, int column)
 **/
 Piece TicTacToeBoard::getPiece(int row, int column)
 {
-  return Invalid;
+  if (row > 3 || column > 3 || row < 0 || column < 0){
+    return Invalid;
+  }
+  return board[row][column];
 }
 
 /**
@@ -51,5 +74,21 @@ Piece TicTacToeBoard::getPiece(int row, int column)
 **/
 Piece TicTacToeBoard::getWinner()
 {
+   //checking the win for Simple Rows and Simple Column
+    for(int i=0; i<3; i++)
+    if( (board[i][0] == board[i][1] && board[i][0] == board[i][2]) || (board[0][i] == board[1][i] && board[0][i] == board[2][i]) )
+      return board[i][0];
+
+    //checking the win for both diagonal
+
+    if( (board[0][0] == board[1][1] && board[0][0] == board[2][2]) || (board[0][2] == board[1][1] && board[0][2] == board[2][0]) )
+    return board[0][0];
+
+    //Checking the game is in continue mode or not
+    for(int i=0; i<3; i++)
+      for(int j=0; j<3; j++)
+        if(board[i][j] != 'X' && board[i][j] != 'O')
+          return Invalid;
+
   return Invalid;
 }
